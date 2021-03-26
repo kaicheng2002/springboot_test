@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuyan.springboot_test.dao.StudentMapper">
+
+    <select id="getStudentAll" resultMap="stuRes">
+        select *
+        from student;
+    </select>
+
+    <resultMap id="stuRes" type="com.yuyan.springboot_test.pojo.Student">
+        <association property="teacher" column="tid" javaType="com.yuyan.springboot_test.pojo.Teacher"
+                     select="getTeacherAll">
+            <result property="id" column="id"/>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+
+    <select id="getTeacherAll" resultType="com.yuyan.springboot_test.pojo.Teacher">
+        select *
+        from teacher
+        where id = #{id}
+    </select>
+
+    <select id="getStudent" resultMap="stuRes2">
+        select s.id sid, s.name sname, t.name tname
+        from student s,
+             teacher t
+        where s.tid = t.id;
+    </select>
+
+    <resultMap id="stuRes2" type="com.yuyan.springboot_test.pojo.Student">
+        <result property="id" column="sid"/>
+        <result property="name" column="sname"/>
+        <association property="teacher" javaType="com.yuyan.springboot_test.pojo.Teacher">
+            <result property="name" column="tname"/>
+        </association>
+    </resultMap>
+
+
+</mapper>
